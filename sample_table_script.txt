@@ -1,0 +1,37 @@
+-- Use your database
+USE [oms];
+GO
+
+-- Table: tile_section_tbl
+CREATE TABLE [dbo].[tile_section_tbl] (
+    [tile_section_id] INT IDENTITY(1,1) PRIMARY KEY,
+    [title] NVARCHAR(100) NULL
+);
+GO
+
+-- Table: tile
+CREATE TABLE [dbo].[tile] (
+    [tile_id] INT IDENTITY(1,1) PRIMARY KEY,
+    [tile_guid] UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
+    [title] NVARCHAR(100) NULL,
+    [tile_section_id] INT NULL,
+    [child_tile_section_id] INT NULL,
+
+    CONSTRAINT FK_Tile_Section FOREIGN KEY ([tile_section_id])
+        REFERENCES [dbo].[tile_section_tbl] ([tile_section_id]),
+
+    CONSTRAINT FK_Tile_ChildSection FOREIGN KEY ([child_tile_section_id])
+        REFERENCES [dbo].[tile_section_tbl] ([tile_section_id])
+);
+GO
+
+-- Table: tile_query
+CREATE TABLE [dbo].[tile_query] (
+    [tile_query_id] INT IDENTITY(1,1) PRIMARY KEY,
+    [tile_id] INT NOT NULL,
+    [query] NVARCHAR(2000) NULL,
+
+    CONSTRAINT FK_TileQuery_Tile FOREIGN KEY ([tile_id])
+        REFERENCES [dbo].[tile] ([tile_id])
+);
+GO
